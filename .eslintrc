@@ -2,19 +2,42 @@
     "root": true,
     "parser": "@typescript-eslint/parser",
     "plugins": [
-        "@typescript-eslint",
-        "prettier"
+        "@typescript-eslint"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
+        "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        "prettier/prettier": 1 // Means error
-    },
-    "ignorePatterns": [
-        "**/*.js"
-    ],
+        "no-extra-semi": 2,
+        "semi": 2
+        // "semi-spacing": [
+        // "error",
+        // {
+        //     "before": false,
+        //     "after": false
+        // }
+        // ]
+    }
 }
+// {
+//     "root": true,
+//     "parser": "@typescript-eslint/parser",
+//     "plugins": [
+//         "@typescript-eslint",
+//         "prettier"
+//     ],
+//     "extends": [
+//         "eslint:recommended",
+//         "plugin:@typescript-eslint/eslint-recommended",
+//         "plugin:@typescript-eslint/recommended",
+//         "prettier"
+//     ],
+//     "rules": {
+//         "prettier/prettier": 1 // Means error
+//     },
+//     "ignorePatterns": [
+//         "**/*.js"
+//     ],
+// }

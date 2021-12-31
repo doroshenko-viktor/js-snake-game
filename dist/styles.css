@@ -1,3 +1,44 @@
 * {
-  color: red;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: black;
+  font-size: 10px;
+}
+
+#app {
+  position: relative;
+  min-height: 100vh;
+}
+
+.field {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  border: 2px solid rgb(199, 199, 199);
+  padding: 0.5rem;
+  background-color: rgb(238, 238, 238);
+}
+
+.field-row {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.field-row div {
+  background-color: rgb(218, 218, 218);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.field-row div.target-selected {
+  background-color: brown;
+}
+
+.field-row div.snake-selected {
+  background-color: green;
 }
