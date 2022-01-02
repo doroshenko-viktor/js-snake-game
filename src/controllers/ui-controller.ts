@@ -28,6 +28,7 @@ const createRow = (gameRow: FieldRow) => {
 };
 
 const renderField = (app: HTMLDivElement, gameField: Field) => {
+    app.innerHTML = '';
     const fieldElement = document.createElement('div');
     fieldElement.classList.add('field');
 
