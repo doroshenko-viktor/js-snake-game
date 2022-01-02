@@ -4,7 +4,7 @@ import { FIELD_WIDTH, FIELD_HEIGHT, SNAKE_INIT_LENGTH, GAME_SPEED_MS } from "./c
 import { Field } from "./models/field";
 import { Snake } from "./models/snake";
 import events from "./controllers/keyboard-events-controller";
-import { ICell } from "./types";
+import { GameStatus, ICell } from "./types";
 
 class DotCell implements ICell {
     private _x: number;
@@ -44,11 +44,19 @@ events.addDirectionKeyPressedEventHandler('snakeHandler', snake.changeDirection.
 
 run();
 
+const isGameOverStatus = (status: GameStatus) =>
+    status === GameStatus.SnakeIntersection
+    || status === GameStatus.Win;
+
 async function run() {
     const x = true;
     while (x) {
         await delay(GAME_SPEED_MS);
-        field.makeStep();
+        const stepStatus = field.makeStep();
+        if (isGameOverStatus(stepStatus)) {
+            ui.renderStatus(app, stepStatus);
+            break;
+        }
         ui.renderField(app, field);
     }
 }

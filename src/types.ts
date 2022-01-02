@@ -14,3 +14,9 @@ export interface ICell {
 export interface IShape {
     getCells(): ICell[]
 }
+
+export enum GameStatus {
+    Continue,
+    SnakeIntersection,
+    Win,
+}

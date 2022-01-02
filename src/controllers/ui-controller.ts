@@ -1,4 +1,4 @@
-import { OccupationType } from "../types";
+import { GameStatus, OccupationType } from "../types";
 import { APP_ID } from "../configuration/constants";
 import { FieldCell, FieldRow, Field } from "../models/field";
 
@@ -40,4 +40,11 @@ const renderField = (app: HTMLDivElement, gameField: Field) => {
     app.appendChild(fieldElement);
 };
 
-export default { getAppElement, renderField };
+const renderStatus = (app: HTMLDivElement, status: GameStatus) => {
+    app.innerHTML = '';
+    const h2 = document.createElement('h2');
+    h2.innerText = status === GameStatus.Win ? "Win" : "Lose";
+    app.appendChild(h2);
+};
+
+export default { getAppElement, renderField, renderStatus };

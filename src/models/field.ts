@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ICell, OccupationType } from '../types';
+import { GameStatus, ICell, OccupationType } from '../types';
 import { Snake } from './snake';
 
 export class FieldCell {
@@ -54,14 +54,27 @@ export class Field {
         return this._rows;
     }
 
-    makeStep() {
-        this._snake.makeStep(this.calculateNextSnakeCellLimits);
+    makeStep(): GameStatus {
+
+
+        const moveStatus = this._snake.makeStep(this.adjustNextSnakeCellPosition);
         this.clear();
         this.projectSnake();
         this.projectDots();
+        if (this._checkWin()) {
+            return GameStatus.Win;
+        }
+        return moveStatus;
     }
 
-    private calculateNextSnakeCellLimits = (next: ICell): [ICell, boolean] => {
+    private _checkWin(): boolean {
+        if (this._dots.length < 1) {
+            return true;
+        }
+        return false;
+    }
+
+    private adjustNextSnakeCellPosition = (next: ICell): [ICell, boolean] => {
         if (next.x > this._width - 1) {
             next.x = 0;
         } else if (next.x < 0) {
