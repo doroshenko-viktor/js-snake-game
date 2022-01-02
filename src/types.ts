@@ -5,8 +5,10 @@ export enum OccupationType {
 }
 
 export interface ICell {
-    readonly x: number;
-    readonly y: number;
+    get x(): number;
+    set x(value: number);
+    get y(): number;
+    set y(value: number);
 }
 
 export interface IShape {

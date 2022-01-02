@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { OccupationType } from '../types';
+import { ICell, OccupationType } from '../types';
 import { Snake } from './snake';
 
 export class FieldCell {
@@ -53,10 +53,23 @@ export class Field {
     }
 
     makeStep() {
-        this._snake.makeStep((next) => [next, false]);
+        this._snake.makeStep(this.calculateNextSnakeCellLimits);
         this.clear();
         this.projectSnake();
     }
+
+    private calculateNextSnakeCellLimits = (next: ICell): [ICell, boolean] => {
+        if (next.x > this._width - 1) {
+            next.x = 0;
+        } else if (next.x < 0) {
+            next.x = this._width - 1;
+        } else if (next.y > this._height - 1) {
+            next.y = 0;
+        } else if (next.y < 0) {
+            next.y = this._height - 1;
+        }
+        return [next, false];
+    };
 
     private projectSnake() {
         this._snake.getCells().forEach(cell => {

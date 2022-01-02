@@ -5,13 +5,26 @@ import { ICell, IShape } from '../types';
 export enum SnakeDirection { Up, Down, Left, Right }
 
 class Cell extends Item implements ICell {
-    public readonly x: number;
-    public readonly y: number;
+    private _x: number;
+    private _y: number;
 
     constructor(x: number, y: number) {
         super();
-        this.x = x;
-        this.y = y;
+        this._x = x;
+        this._y = y;
+    }
+
+    get x() {
+        return this._x;
+    }
+    set x(value) {
+        this._x = value;
+    }
+    get y() {
+        return this._y;
+    }
+    set y(value) {
+        this._y = value;
     }
 }
 
@@ -38,7 +51,7 @@ export class Snake implements IShape {
         this._direction = direction;
     }
 
-    makeStep(cb: (nextCell: Cell) => [Cell, boolean]): void {
+    makeStep(cb: (nextCell: ICell) => [ICell, boolean]): void {
         if (this._direction === SnakeDirection.Right && this._body.tail !== null) {
             const nextCell = new Cell(this._body.tail.x + 1, this._body.tail.y);
             const [normalizedCell, isExtendSize] = cb(nextCell);
