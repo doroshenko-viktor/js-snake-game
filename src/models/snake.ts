@@ -29,8 +29,12 @@ export class Snake implements IShape {
     }
 
     changeDirection(direction: SnakeDirection) {
-        console.log(`handled in snake.ts`);
-        console.log(direction);
+        if ((this._direction === SnakeDirection.Up && direction === SnakeDirection.Down)
+            || (this._direction === SnakeDirection.Down && direction === SnakeDirection.Up)
+            || (this._direction === SnakeDirection.Left && direction === SnakeDirection.Right)
+            || (this._direction === SnakeDirection.Right && direction === SnakeDirection.Left)) {
+            return;
+        }
         this._direction = direction;
     }
 
