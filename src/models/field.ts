@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { OccupationType } from './types';
+import { OccupationType } from '../types';
 import { Snake } from './snake';
 
 export class FieldCell {

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { List, Item } from 'linked-list';
-import { ICell, IShape } from './types';
+import { ICell, IShape } from '../types';
 
 export enum SnakeDirection { Up, Down, Left, Right }
 
@@ -43,7 +43,7 @@ export class Snake implements IShape {
                 this._body.head?.detach();
             }
         } else if (this._direction === SnakeDirection.Down && this._body.tail !== null) {
-            const nextCell = new Cell(this._body.tail.x, this._body.tail.y - 1);
+            const nextCell = new Cell(this._body.tail.x, this._body.tail.y + 1);
             const [normalizedCell, isExtendSize] = cb(nextCell);
             this._body.append(normalizedCell);
             if (!isExtendSize) {
@@ -57,7 +57,7 @@ export class Snake implements IShape {
                 this._body.head?.detach();
             }
         } else if (this._direction === SnakeDirection.Up && this._body.tail !== null) {
-            const nextCell = new Cell(this._body.tail.x, this._body.tail.y + 1);
+            const nextCell = new Cell(this._body.tail.x, this._body.tail.y - 1);
             const [normalizedCell, isExtendSize] = cb(nextCell);
             this._body.append(normalizedCell);
             if (!isExtendSize) {

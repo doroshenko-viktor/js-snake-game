@@ -1,6 +1,6 @@
-import { OccupationType } from "./types";
-import { APP_ID } from "./constants";
-import { FieldCell, FieldRow, Field } from "./field";
+import { OccupationType } from "../types";
+import { APP_ID } from "../configuration/constants";
+import { FieldCell, FieldRow, Field } from "../models/field";
 
 
 const getAppElement = () => {
