@@ -35,11 +35,13 @@ export class Field {
     private _snake: Snake;
     private _width: number;
     private _height: number;
+    private _dots: ICell[];
 
-    constructor(width: number, height: number, snake: Snake) {
+    constructor(width: number, height: number, snake: Snake, dots: ICell[]) {
         this._snake = snake;
         this._width = width;
         this._height = height;
+        this._dots = dots;
     }
 
     private clear() {
@@ -56,6 +58,7 @@ export class Field {
         this._snake.makeStep(this.calculateNextSnakeCellLimits);
         this.clear();
         this.projectSnake();
+        this.projectDots();
     }
 
     private calculateNextSnakeCellLimits = (next: ICell): [ICell, boolean] => {
@@ -68,8 +71,23 @@ export class Field {
         } else if (next.y < 0) {
             next.y = this._height - 1;
         }
+
+        const mergingDotIndex = this._dots.findIndex(dot => dot.x === next.x && dot.y === next.y);
+        if (mergingDotIndex > -1) {
+            this._dots.splice(mergingDotIndex, 1);
+            return [next, true];
+        }
+
         return [next, false];
     };
+
+    private projectDots() {
+        this._dots.forEach(dot => {
+            const row = this._rows[dot.y];
+            const fieldCell = row.cells[dot.x];
+            fieldCell.occupation = OccupationType.Target;
+        });
+    }
 
     private projectSnake() {
         this._snake.getCells().forEach(cell => {
