@@ -6,10 +6,11 @@ import {
   SNAKE_INIT_LENGTH,
   GAME_SPEED_MS
 } from './configuration/constants';
-import { Field } from './models/field';
-import { Snake } from './models/snake';
+import { Field } from './models/field/field';
+import { Snake } from './models/snake/snake';
 import events from './controllers/keyboard-events-controller';
-import { GameStatus, ICell } from './types';
+import { ICell } from './interfaces/shape-interfaces';
+import GameStatus from './enums/game-status';
 
 class DotCell implements ICell {
   private _x: number;

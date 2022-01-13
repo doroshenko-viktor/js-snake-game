@@ -8,7 +8,7 @@ module.exports = {
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
-        "src/**/*.{ts,js}",
+        "src/**/*.{ts}",
         "!src/**/*.d.ts"
     ]
 };

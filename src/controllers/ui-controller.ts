@@ -1,6 +1,7 @@
-import { GameStatus, OccupationType } from '../types';
 import { APP_ID } from '../configuration/constants';
-import { FieldCell, FieldRow, Field } from '../models/field';
+import GameStatus from '../enums/game-status';
+import OccupationType from '../enums/occupation-type';
+import { FieldCell, FieldRow, Field } from '../models/field/field';
 
 const getAppElement = () => {
   return document.getElementById(APP_ID) as HTMLDivElement;

@@ -1,4 +1,4 @@
-import { SnakeDirection } from '../models/snake';
+import SnakeDirection from '../models/snake/snake-direction';
 
 export type KeyPressedHandler = (key: string, code: string) => void;
 export type SnakeDirectionChangedHandler = (direction: SnakeDirection) => void;

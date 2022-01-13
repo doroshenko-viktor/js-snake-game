@@ -1,6 +1,8 @@
 import _ from 'lodash';
-import { GameStatus, ICell, OccupationType } from '../types';
-import { Snake } from './snake';
+import GameStatus from '../../enums/game-status';
+import OccupationType from '../../enums/occupation-type';
+import { ICell } from '../../interfaces/shape-interfaces';
+import { Snake } from '../snake/snake';
 
 export class FieldCell {
   private _occupation: OccupationType;

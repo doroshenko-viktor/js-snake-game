@@ -1,37 +1,9 @@
 import _ from 'lodash';
-import { List, Item } from 'linked-list';
-import { GameStatus, ICell, IShape } from '../types';
-
-export enum SnakeDirection {
-  Up,
-  Down,
-  Left,
-  Right
-}
-
-class Cell extends Item implements ICell {
-  private _x: number;
-  private _y: number;
-
-  constructor(x: number, y: number) {
-    super();
-    this._x = x;
-    this._y = y;
-  }
-
-  get x() {
-    return this._x;
-  }
-  set x(value) {
-    this._x = value;
-  }
-  get y() {
-    return this._y;
-  }
-  set y(value) {
-    this._y = value;
-  }
-}
+import { List } from 'linked-list';
+import Cell from '../shapes/cell';
+import { ICell, IShape } from '../../interfaces/shape-interfaces';
+import SnakeDirection from './snake-direction';
+import GameStatus from '../../enums/game-status';
 
 export class Snake implements IShape {
   private _direction: SnakeDirection;
@@ -45,7 +17,7 @@ export class Snake implements IShape {
     this._body = List.from(cells);
   }
 
-  changeDirection(direction: SnakeDirection) {
+  changeDirection(direction: SnakeDirection): boolean {
     if (
       (this._direction === SnakeDirection.Up &&
         direction === SnakeDirection.Down) ||
@@ -56,9 +28,10 @@ export class Snake implements IShape {
       (this._direction === SnakeDirection.Right &&
         direction === SnakeDirection.Left)
     ) {
-      return;
+      return false;
     }
     this._direction = direction;
+    return true;
   }
 
   makeStep(cb: SnakeMakeStepCallback): GameStatus {
@@ -123,4 +96,5 @@ export class Snake implements IShape {
     return this._body.toArray();
   }
 }
+
 type SnakeMakeStepCallback = (nextCell: ICell) => [ICell, boolean];
