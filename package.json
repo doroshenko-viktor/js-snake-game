@@ -4,7 +4,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watchAll",
+    "view:coverage": "serve coverage/lcov-report",
+    "lint": "eslint . --ext .ts",
     "start": "npx webpack serve",
     "build": "webpack --config webpack.config.js -w"
   },
@@ -22,6 +25,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.5",
+    "jest-cli": "^27.4.5",
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.2",
     "ts-loader": "^9.2.6",
