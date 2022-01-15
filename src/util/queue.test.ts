@@ -1,6 +1,6 @@
 import Queue from './queue';
 
-describe('linked list tests', () => {
+describe('queue creation tests', () => {
   it('should create empty linked list', () => {
     const list = new Queue<number>();
     expect(list.length).toBe(0);
@@ -62,5 +62,19 @@ describe('linked list tests', () => {
     const queue = new Queue<number>([1, 2, 3]);
     queue.dequeue();
     expect(queue.length).toBe(2);
+  });
+});
+
+describe('queue contains tests', () => {
+  it('should return false, when not contains', () => {
+    const queue = new Queue<number>([1, 2, 3]);
+    const result = queue.contains((x) => x === 4);
+    expect(result).toBeFalsy();
+  });
+
+  it('should return true, when contains', () => {
+    const queue = new Queue<number>([1, 2, 3]);
+    const result = queue.contains((x) => x === 2);
+    expect(result).toBeTruthy();
   });
 });

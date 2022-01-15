@@ -54,6 +54,22 @@ class Queue<T> {
   }
 
   /**
+   * Check if element with some condition exists inside of the queue
+   * @param predicate - function, checking condition of contained element
+   * @returns boolean true if satisfying element exists in queue and false in opposite case
+   */
+  contains(predicate: (value: T) => boolean): boolean {
+    let current = this._head;
+    while (current !== null) {
+      if (predicate(current.value)) {
+        return true;
+      }
+      current = current.next ?? null;
+    }
+    return false;
+  }
+
+  /**
    * Add value as next to existing tail
    * @param value T
    */
