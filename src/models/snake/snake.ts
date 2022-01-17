@@ -2,7 +2,6 @@ import _ from 'lodash';
 import Cell from '../shapes/cell';
 import { ICell, IShape } from '../../interfaces/shape-interfaces';
 import SnakeDirection from './snake-direction';
-import GameStatus from '../../enums/game-status';
 import Queue from '../../util/queue';
 import snakeUtils from './snake-utils';
 
@@ -12,10 +11,13 @@ import snakeUtils from './snake-utils';
 export class Snake implements IShape {
   private _direction: SnakeDirection;
   private _body: Queue<ICell>;
+  public state: SnakeState;
 
   constructor(body: ICell[], direction: SnakeDirection) {
     this._direction = direction;
     this._body = new Queue(body);
+    // TODO: may happen, that there is intersection in given body => handle
+    this.state = new SnakeState(false);
   }
 
   /**
@@ -46,8 +48,13 @@ export class Snake implements IShape {
     return true;
   }
 
-  makeStep(cb: SnakeEnvironmentVerificationCallback): GameStatus {
-    const makeStepWhenNotEmptySnake = (snakeTail: ICell): GameStatus => {
+  /**
+   * Make new step for the Snake
+   * @param cb - external environment callback
+   * @returns
+   */
+  makeStep(cb: SnakeEnvironmentVerificationCallback): void {
+    const makeStepWhenNotEmptySnake = (snakeTail: ICell) => {
       const stepRight = () =>
         this._makeStepToCoordinates(snakeTail.x + 1, snakeTail.y, cb);
       const stepLeft = () =>
@@ -89,20 +96,19 @@ export class Snake implements IShape {
     x: number,
     y: number,
     environmentVerificationCallback: SnakeEnvironmentVerificationCallback
-  ) {
+  ): void {
     const isIntersectionHappen = (newCell: ICell) =>
       this._body.contains((cell) => cell.equals(newCell));
 
     const nextCell = new Cell(x, y);
     if (isIntersectionHappen(nextCell)) {
-      return GameStatus.SnakeIntersection;
+      this.state.hasCollisions = true;
     }
     const verificationResult = environmentVerificationCallback(nextCell);
     this._body.enqueue(verificationResult.cell);
     if (!verificationResult.isExtendSize) {
       this._body.dequeue();
     }
-    return GameStatus.Continue;
   }
 }
 
@@ -125,4 +131,7 @@ function getCellsVector(length: number) {
   return _.range(0, length).map((ind) => {
     return new Cell(ind, 0);
   });
+}
+class SnakeState {
+  constructor(public hasCollisions: boolean) {}
 }

@@ -96,4 +96,14 @@ describe('make move tests', () => {
     const cells = snake.getCells();
     expect(cells.find((x) => x.equals(new Cell(0, 0)))).toBeTruthy();
   });
+
+  it('should contain collision, when it ocurred', () => {
+    const snake = new Snake(
+      [new Cell(0, 0), new Cell(1, 0), new Cell(1, 1), new Cell(0, 1)],
+      SnakeDirection.Up
+    );
+    snake.makeStep((nextCell) => ({ cell: nextCell, isExtendSize: false }));
+
+    expect(snake.state.hasCollisions).toBeTruthy();
+  });
 });
