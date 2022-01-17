@@ -1,99 +1,128 @@
-// import _ from 'lodash';
-// import Cell from '../shapes/cell';
-// import { ICell, IShape } from '../../interfaces/shape-interfaces';
-// import SnakeDirection from './snake-direction';
-// import GameStatus from '../../enums/game-status';
+import _ from 'lodash';
+import Cell from '../shapes/cell';
+import { ICell, IShape } from '../../interfaces/shape-interfaces';
+import SnakeDirection from './snake-direction';
+import GameStatus from '../../enums/game-status';
+import Queue from '../../util/queue';
+import snakeUtils from './snake-utils';
 
-// export class Snake implements IShape {
-//   private _direction: SnakeDirection;
-//   // private _body: List<Cell>;
+/**
+ * Snake business logic
+ */
+export class Snake implements IShape {
+  private _direction: SnakeDirection;
+  private _body: Queue<ICell>;
 
-//   constructor(initLength: number) {
-//     this._direction = SnakeDirection.Right;
-//     const cells = _.range(0, initLength).map((ind) => {
-//       return new Cell(ind, 0);
-//     });
-//     this._body = List.from(cells);
-//   }
+  constructor(body: ICell[], direction: SnakeDirection) {
+    this._direction = direction;
+    this._body = new Queue(body);
+  }
 
-//   changeDirection(direction: SnakeDirection): boolean {
-//     if (
-//       (this._direction === SnakeDirection.Up &&
-//         direction === SnakeDirection.Down) ||
-//       (this._direction === SnakeDirection.Down &&
-//         direction === SnakeDirection.Up) ||
-//       (this._direction === SnakeDirection.Left &&
-//         direction === SnakeDirection.Right) ||
-//       (this._direction === SnakeDirection.Right &&
-//         direction === SnakeDirection.Left)
-//     ) {
-//       return false;
-//     }
-//     this._direction = direction;
-//     return true;
-//   }
+  /**
+   * Create Snake with given parameters or with default values.
+   * Initial body length is 1.
+   * Initial direction is to the right.
+   * @returns Snake
+   */
+  static create(length = 1, direction = SnakeDirection.Right) {
+    const cells = getCellsVector(length);
+    return new Snake(cells, direction);
+  }
 
-//   makeStep(cb: SnakeMakeStepCallback): GameStatus {
-//     const isMoveRight = () => this._direction === SnakeDirection.Right;
-//     const isMoveLeft = () => this._direction === SnakeDirection.Left;
-//     const isMoveUp = () => this._direction === SnakeDirection.Up;
-//     const isMoveDown = () => this._direction === SnakeDirection.Down;
+  get direction(): SnakeDirection {
+    return this._direction;
+  }
 
-//     const makeStepWhenNotEmptySnake = (snakeTail: ICell): GameStatus => {
-//       const stepRight = () =>
-//         this._makeStepToCoordinates(snakeTail.x + 1, snakeTail.y, cb);
-//       const stepLeft = () =>
-//         this._makeStepToCoordinates(snakeTail.x - 1, snakeTail.y, cb);
-//       const stepUp = () =>
-//         this._makeStepToCoordinates(snakeTail.x, snakeTail.y - 1, cb);
-//       const stepDown = () =>
-//         this._makeStepToCoordinates(snakeTail.x, snakeTail.y + 1, cb);
+  /**
+   *
+   * @param direction SnakeDirection
+   * @returns `true` if direction has been changed and `false` if not
+   */
+  changeDirection(direction: SnakeDirection): boolean {
+    if (snakeUtils.isOppositeDirection(this._direction, direction)) {
+      return false;
+    }
+    this._direction = direction;
+    return true;
+  }
 
-//       if (isMoveRight()) {
-//         return stepRight();
-//       } else if (isMoveDown()) {
-//         return stepDown();
-//       } else if (isMoveLeft()) {
-//         return stepLeft();
-//       } else if (isMoveUp()) {
-//         return stepUp();
-//       } else {
-//         throw new Error('unknown snake move');
-//       }
-//     };
+  makeStep(cb: SnakeEnvironmentVerificationCallback): GameStatus {
+    const makeStepWhenNotEmptySnake = (snakeTail: ICell): GameStatus => {
+      const stepRight = () =>
+        this._makeStepToCoordinates(snakeTail.x + 1, snakeTail.y, cb);
+      const stepLeft = () =>
+        this._makeStepToCoordinates(snakeTail.x - 1, snakeTail.y, cb);
+      const stepUp = () =>
+        this._makeStepToCoordinates(snakeTail.x, snakeTail.y - 1, cb);
+      const stepDown = () =>
+        this._makeStepToCoordinates(snakeTail.x, snakeTail.y + 1, cb);
 
-//     if (this._body.tail !== null) {
-//       return makeStepWhenNotEmptySnake(this._body.tail);
-//     }
-//     throw new Error('Cannot make step - snake is empty');
-//   }
+      if (snakeUtils.isMoveRight(this._direction)) {
+        return stepRight();
+      } else if (snakeUtils.isMoveDown(this._direction)) {
+        return stepDown();
+      } else if (snakeUtils.isMoveLeft(this._direction)) {
+        return stepLeft();
+      } else if (snakeUtils.isMoveUp(this._direction)) {
+        return stepUp();
+      } else {
+        throw new Error('unknown snake move');
+      }
+    };
 
-//   private _makeStepToCoordinates(
-//     x: number,
-//     y: number,
-//     cb: SnakeMakeStepCallback
-//   ) {
-//     const isIntersectionHappen = (newCell: ICell) => {
-//       const intersectionIndex = this._body
-//         .toArray()
-//         .findIndex((cell) => cell.x === newCell.x && cell.y === newCell.y);
-//       return intersectionIndex > -1;
-//     };
-//     const nextCell = new Cell(x, y);
-//     const [normalizedCell, isExtendSize] = cb(nextCell);
-//     if (isIntersectionHappen(normalizedCell)) {
-//       return GameStatus.SnakeIntersection;
-//     }
-//     this._body.append(normalizedCell);
-//     if (!isExtendSize) {
-//       this._body.head?.detach();
-//     }
-//     return GameStatus.Continue;
-//   }
+    const tail = this._body.getTail();
+    if (tail) {
+      return makeStepWhenNotEmptySnake(tail);
+    }
+    throw new Error('Cannot make step - snake is empty');
+  }
 
-//   getCells(): ICell[] {
-//     return this._body.toArray();
-//   }
-// }
+  /**
+   * Get all snake cells as an array
+   * @returns ICell[]
+   */
+  getCells(): ICell[] {
+    return this._body.toArray();
+  }
 
-// type SnakeMakeStepCallback = (nextCell: ICell) => [ICell, boolean];
+  private _makeStepToCoordinates(
+    x: number,
+    y: number,
+    environmentVerificationCallback: SnakeEnvironmentVerificationCallback
+  ) {
+    const isIntersectionHappen = (newCell: ICell) =>
+      this._body.contains((cell) => cell.equals(newCell));
+
+    const nextCell = new Cell(x, y);
+    if (isIntersectionHappen(nextCell)) {
+      return GameStatus.SnakeIntersection;
+    }
+    const verificationResult = environmentVerificationCallback(nextCell);
+    this._body.enqueue(verificationResult.cell);
+    if (!verificationResult.isExtendSize) {
+      this._body.dequeue();
+    }
+    return GameStatus.Continue;
+  }
+}
+
+/**
+ * This callback allow snake to know what happens in the external environment, when next step happens.
+ * e.g. snake knows it's position, so it is possible to know, when it will bite itself on the next step, but snake does not know about other external obstacles on the outer environment.
+ * This callback allows environment, where snake is placed to tell back if external event happens, when snake makes a step.
+ * Examples of such events are: snake overlaps a board or snake eats an apple.
+ */
+type SnakeEnvironmentVerificationCallback = (
+  nextCell: ICell
+) => SnakeVerificationResult;
+
+type SnakeVerificationResult = {
+  cell: ICell;
+  isExtendSize: boolean;
+};
+
+function getCellsVector(length: number) {
+  return _.range(0, length).map((ind) => {
+    return new Cell(ind, 0);
+  });
+}

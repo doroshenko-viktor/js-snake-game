@@ -9,6 +9,10 @@ class Cell implements ICell {
     this._y = y;
   }
 
+  equals(other: ICell): boolean {
+    return this._x === other.x && this.y === other.y;
+  }
+
   get x() {
     return this._x;
   }

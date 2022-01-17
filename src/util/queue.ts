@@ -1,3 +1,5 @@
+import Cell from '../models/shapes/cell';
+
 /**
  * Node of the queue, containing value and links to the next and previous node
  */
@@ -31,6 +33,10 @@ class Queue<T> {
     return this._length;
   }
 
+  getTail(): T | null {
+    return this._tail?.value ?? null;
+  }
+
   /**
    * Get next element and remove it from the queue
    * @returns element of generic type T
@@ -38,6 +44,7 @@ class Queue<T> {
   dequeue(): T | null {
     if (this._head) {
       const result = this._head.value;
+      this._head = this._head.next ?? null;
       this._length--;
       return result;
     }
@@ -67,6 +74,20 @@ class Queue<T> {
       current = current.next ?? null;
     }
     return false;
+  }
+
+  /**
+   * Convert to array of T elements
+   * @returns
+   */
+  toArray(): T[] {
+    const resultArray: T[] = [];
+    let current = this._head;
+    while (current) {
+      resultArray.push(current.value);
+      current = current.next as QueueNode<T> | null;
+    }
+    return resultArray;
   }
 
   /**

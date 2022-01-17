@@ -3,10 +3,12 @@
  *placed on the field
  */
 
+import { IEquatable } from './object-interfaces';
+
 /**
  * Represents behavior of 2D cell
  */
-export interface ICell {
+export interface ICell extends IEquatable<ICell> {
   /**
    * Get current `x` coordinate value
    */

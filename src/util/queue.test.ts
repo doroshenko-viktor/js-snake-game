@@ -63,6 +63,28 @@ describe('queue creation tests', () => {
     queue.dequeue();
     expect(queue.length).toBe(2);
   });
+
+  it('should dequeue, when queue is not empty and previous head should not exist', () => {
+    const queue = new Queue<number>([1, 2, 3]);
+    queue.dequeue();
+    const elements = queue.toArray();
+    expect(elements.find((x) => x === 1)).toBeFalsy();
+  });
+
+  it('should return tail', () => {
+    const queue = new Queue<number>([1, 2, 3]);
+    const result = queue.getTail();
+    expect(result).toBe(3);
+  });
+
+  it('should convert queue elements to array', () => {
+    const queue = new Queue<number>([1, 2, 3]);
+    const result = queue.toArray();
+    expect(Array.isArray(result));
+    expect(result.find((x) => x === 1)).not.toBeNull();
+    expect(result.find((x) => x === 2)).not.toBeNull();
+    expect(result.find((x) => x === 3)).not.toBeNull();
+  });
 });
 
 describe('queue contains tests', () => {
